@@ -1,0 +1,47 @@
+create table if not exists genre(
+genre_id serial primary key,
+genre_name text not null
+);
+
+create table if not exists singer(
+singer_id serial primary key,
+singer_name text not null
+);
+
+create table if not exists singer_genre(
+genre_id integer references genre(genre_id),
+singer_id integer references singer(singer_id),
+constraint combine_singer_genre primary key (genre_id, singer_id)
+);
+
+create table if not exists album(
+album_id serial primary key,
+album_name text not null,
+release_year date
+);
+
+create table if not exists song(
+song_id serial primary key,
+song_name text not null,
+duration  time,
+album_id integer not null references album(album_id)
+);
+
+create table if not exists album_singer(
+singer_id integer not null references singer(singer_id),
+album_id integer not null references album(album_id),
+constraint combine_singer_album primary key (album_id, singer_id)
+);
+
+create table if not exists hits(
+hits_id serial primary key,
+hits_name text not null,
+hits_release_year date
+);
+
+create table if not exists song_hits(
+hits_id integer not null references hits(hits_id),
+song_id integer not null references song(song_id),
+constraint combine_song_hits primary key (hits_id, song_id)
+);
+

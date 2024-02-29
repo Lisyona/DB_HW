@@ -1,0 +1,16 @@
+select album_name, release_year from album
+where date_part('year', release_year) = '2018';
+
+SELECT song_name, duration FROM song ORDER BY duration DESC LIMIT 1;
+
+select song_name, duration from song
+where duration > time '00:03:30';
+
+select hits_name from hits
+where date_part('year', hits_release_year) >= '2018' and date_part('year', hits_release_year) <= '2020';
+
+select singer_name from singer
+where regexp_count(singer_name , ' ') = 0;
+
+select song_name from song
+where ARRAY[regexp_split_to_array(Lower(song_name), ' ')] && ARRAY['me'];
