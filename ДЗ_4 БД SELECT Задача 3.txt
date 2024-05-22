@@ -15,23 +15,20 @@ select singer_id, singer_name from singer
 where singer_id not in 
 (select singer_id from album_singer as2 
 left join album on as2.album_id = album.album_id
-where date_part('year', release_year) = '2020'
-group by singer_id);
+where date_part('year', release_year) = '2020');
 
-select hits_id, hits_name from hits 
-where hits_id in 
-(select hits_id from song_hits sh  
-left join song s on s.song_id = sh.song_id 
-left join album_singer as2 on as2.album_id = s.album_id
-left join singer on as2. singer_id = singer.singer_id
-where singer_name = 'Freddie Mercury');
+select distinct hits_id, hits_name from hits 
+join song_hits using(hits_id)
+join song s using(song_id) 
+join album_singer using(album_id)
+join singer using(singer_id)
+where singer_name = 'Freddie Mercury';
 
 select album.album_id, album_name from album
-left join album_singer as2 on album.album_id = as2.album_id
-where singer_id in 
-(select singer_genre.singer_id from singer_genre
-group by singer_id
-having count(genre_id)> 1);
+join album_singer using(album_id)
+join singer_genre using (singer_id)
+group by album_id
+having count(genre_id)> 1;
 
 select song_id, song_name from song s 
 where song_id not in 
@@ -45,10 +42,14 @@ where song.duration in
 left join album_singer on album_singer.album_id = song.album_id);
 
 select a.album_id, a.album_name from album a 
-left join song on song.album_id = a.album_id
-group by a.album_id
+join song using(album_id)
+where album_id in 
+(select album_id from album a2
+join song s using(album_id)
+group by album_id
 order by count(song_id) asc
-limit 3;
+limit 3)
+group by album_id;
 
 
 
